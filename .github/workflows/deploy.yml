@@ -1,45 +1,36 @@
 name: Deploy React App to AWS
-
 on:
   push:
     branches:
       - main
-
 jobs:
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
-
     env:
-      AWS_REGION: us-east-2 # Ajusta esto según la región de tu bucket
-
+      AWS_REGION: us-east-2 
     steps:
-    # 1. Checkout del código fuente
+
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2. Configurar Node.js en el entorno
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '16'
 
-    # 3. Instalar dependencias del proyecto
     - name: Install dependencies
       run: npm install
 
-    # 4. Compilar el proyecto
     - name: Build the React app
       run: npm run build
 
-    # 5. Configurar las credenciales de AWS
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: AKIAYSE4OFYD42APGYOR
         aws-secret-access-key: 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
         aws-region: us-east-2
-        
-    # 6. Desplegar la aplicación a S3
+
     - name: Deploy to S3
       run: aws s3 sync build/ s3://autotarget-bucket --delete
